@@ -75,7 +75,7 @@ string DEC(string num, ll sys)
 
 string CNV(string num, ll sys1, ll sys2)
 {
-    ll bits=num.size(), group=log_ll(sys2)/log_ll(sys1);
+    ll bits=num.size(), group=(ll)log_ll(sys1, sys2);
     ld step = log_ll(sys1, sys2);
     group = step==group?group:bits;
 
