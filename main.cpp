@@ -5,6 +5,50 @@
 using namespace std;
 using ll = long long;
 using ld = long double;
+const ll MOD = 1e9+7;
+
+ll pow_ll(ll x, ll y, ll MOD) {
+    ll res = 1;
+    x = x % MOD; 
+    while (y > 0) {
+        if (y % 2 == 1) { 
+            res = (res * x) % MOD;
+        }
+        x = (x * x) % MOD; 
+        y = y / 2; 
+    }
+    return res;
+}
+
+ld ln(ll a) {
+    if (a <= 0) {
+        return std::numeric_limits<ld>::quiet_NaN();
+    }
+    ll k = 0;
+    ll temp = a;
+    while (temp > 1) {
+        temp >>= 1;
+        k++;
+    }
+    ld z = static_cast<ld>(a) / (1LL << k) - 1.0L;
+    ld sum = 0.0L;
+    ld term = z;
+    for (ll n = 1; n <= 20; n++) {
+        sum += term / n;
+        term *= -z;
+    }
+    const ld ln2 = 0.6931471805599453L;
+    return k * ln2 + sum;
+}
+
+ld log_ll(ll x, ll y) {
+    if (x <= 0 || x == 1 || y <= 0) {
+        return std::numeric_limits<ld>::quiet_NaN();
+    }
+    ld ln_y = ln(y);
+    ld ln_x = ln(x);
+    return ln_y / ln_x;
+}
 
 ll to_ll(string __str)
   {
@@ -31,8 +75,8 @@ string DEC(string num, ll sys)
 
 string CNV(string num, ll sys1, ll sys2)
 {
-    ll bits=num.size(), group=log(sys2)/log(sys1);
-    ld step = log(sys2)/log(sys1);
+    ll bits=num.size(), group=log_ll(sys2)/log_ll(sys1);
+    ld step = log_ll(sys1, sys2);
     group = step==group?group:bits;
 
     while(bits%group>0) {
@@ -44,7 +88,7 @@ string CNV(string num, ll sys1, ll sys2)
     ll bit=0;
     for (ll i=0; i<bits; i++) {
         ll digit = (num[i] >= 'A' ? num[i] - 'A' + 10 : num[i] - '0');
-        bit += digit * pow(sys1, (bits - i - 1) % group);
+        bit += digit * pow_ll(sys1, (bits - i - 1) % group, MOD);
         if ((bits-i-1)%group==0) {
             res += DEC(to_string(bit), sys2);
             bit=0;
